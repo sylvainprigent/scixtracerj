@@ -71,7 +71,7 @@ public class SxProcessedData extends SxData {
     }
     
     /**
-     * Set the run output. Only one ouput possible which is this processed data
+     * Set the run output. Only one output possible which is this processed data
      * @param output Container for a run output
      */
     public void set_run_output(SxProcessedDataOutput output)

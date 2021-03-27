@@ -1,6 +1,6 @@
 package scixtracerj;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SxDataset extends SxMetadata {
@@ -74,7 +74,7 @@ public class SxDataset extends SxMetadata {
 	 */
 	List<String> get_data_list()
 	{
-		List<String> uris = Collections.emptyList();
+		List<String> uris = new ArrayList<String>();
 	    for (int i = 0 ; i < m_data.size() ; i++){
 	        uris.add(m_data.get(i).get_md_uri());
 	    }
