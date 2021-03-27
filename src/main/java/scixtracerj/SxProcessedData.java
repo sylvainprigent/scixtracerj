@@ -17,7 +17,7 @@ public class SxProcessedData extends SxData {
      * Get the run metadata
      * @return The run metadata
      */
-    SxMetadata get_run()
+    public SxMetadata get_run()
     {
     	return m_run;
     }
@@ -26,7 +26,7 @@ public class SxProcessedData extends SxData {
      * Get the run output. Only one output possible which is this processed data
      * @return Container of the run output
      */ 
-    SxProcessedDataOutput get_run_output()
+    public SxProcessedDataOutput get_run_output()
     {
     	return m_output;
     }
@@ -35,7 +35,7 @@ public class SxProcessedData extends SxData {
      * Get the number of run inputs
      * @return Number of run inputs
      */
-    int get_run_inputs_count()
+    public int get_run_inputs_count()
     {
     	return m_inputs.size();
     }
@@ -45,7 +45,7 @@ public class SxProcessedData extends SxData {
      * @param index Index of the input in the input list
      * @return Container of run input
      */
-    SxProcessedDataInput get_run_input(int index)
+    public SxProcessedDataInput get_run_input(int index)
     {
     	SxProcessedDataInput[] arr = (SxProcessedDataInput[]) m_inputs.values().toArray();
     	return  arr[index];  
@@ -55,7 +55,7 @@ public class SxProcessedData extends SxData {
      * Set the run metadata
      * @param run Run metadata
      */
-    void set_run(SxMetadata run)
+    public void set_run(SxMetadata run)
     {
     	m_run = run;
     }
@@ -65,7 +65,7 @@ public class SxProcessedData extends SxData {
      * @param name Name of the input data
      * @param input Container for a run input
      */
-    void set_run_input(String name, SxProcessedDataInput input)
+    public void set_run_input(String name, SxProcessedDataInput input)
     {
     	m_inputs.put(name, input);
     }
@@ -74,7 +74,7 @@ public class SxProcessedData extends SxData {
      * Set the run output. Only one ouput possible which is this processed data
      * @param output Container for a run output
      */
-    void set_run_output(SxProcessedDataOutput output)
+    public void set_run_output(SxProcessedDataOutput output)
     {
     	m_output = output;
     }
@@ -88,7 +88,7 @@ public class SxProcessedData extends SxData {
      * @param format_ Data format
      * @param uri Data file URI
      */
-    void set_info(String name, String author, SxDate date, SxFormat format_, String uri)
+    public void set_info(String name, String author, SxDate date, SxFormat format_, String uri)
     {
         m_name = name;
         m_author = author;
@@ -103,7 +103,7 @@ public class SxProcessedData extends SxData {
      * @param data Metadata of the input data
      * @param type Type of the data (raw or processsed)
      */
-    void add_input(String name, SxMetadata data, String type)
+    public void add_input(String name, SxMetadata data, String type)
     {
     	this.set_run_input(name, new SxProcessedDataInput(name, data, type));
     }
@@ -113,7 +113,7 @@ public class SxProcessedData extends SxData {
      * @param name Name of the process output
      * @param label Label of the process output
      */
-    void set_output(String name, String label)
+    public void set_output(String name, String label)
     {
     	this.set_run_output(new SxProcessedDataOutput(name, label));
     }
