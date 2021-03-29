@@ -50,8 +50,9 @@ public abstract class SxRequest {
 	/**
 	 *  Write an experiment to the database
 	 * @param experiment Container of the experiment metadata
+	 * @throws Exception 
 	 */
-	public abstract void update_experiment(SxExperiment experiment);
+	public abstract void update_experiment(SxExperiment experiment) throws Exception;
 
 	/**
 	 * import one data to the experiment. The data is imported to the rawdataset
@@ -178,8 +179,9 @@ public abstract class SxRequest {
 	 * @param experiment Container of the experiment metadata
 	 * @param tag The name (or key) of the tag to add to the data
 	 * @param values List of possible values (str) for the tag to find in the filename
+	 * @throws Exception 
 	 */
-	void tag_from_name(SxExperiment experiment, String tag, List<String> values)
+	void tag_from_name(SxExperiment experiment, String tag, List<String> values) throws Exception
 	{
 	    experiment.set_tag_key(tag);
 	    this.update_experiment(experiment);
@@ -203,8 +205,9 @@ public abstract class SxRequest {
 	 * @param tag The name (or key) of the tag to add to the data
 	 * @param separator The character used as a separator in the filename (ex: _)
 	 * @param value_position Position of the value to extract with respect to the separators
+	 * @throws Exception 
 	 */
-	void tag_using_separator(SxExperiment experiment, String tag, String separator, int value_position)
+	void tag_using_separator(SxExperiment experiment, String tag, String separator, int value_position) throws Exception
 	{
 	    experiment.set_tag_key(tag);
 	    this.update_experiment(experiment);

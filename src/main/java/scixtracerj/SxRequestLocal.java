@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
@@ -20,74 +21,201 @@ public class SxRequestLocal extends SxRequest{
 
 	}
 
-	public SxExperiment create_experiment(String name, String author, SxDate date, List<String> tag_keys, String destination)
+	public SxExperiment create_experiment(String name, String author, SxDate date, List<String> tag_keys, String destination) throws Exception
 	{
-		
+		SxExperiment container = new SxExperiment();
+		container.set_uuid(this._generate_uuid());
+		container.set_name(name);
+		container.set_author(author);
+		container.set_date(date);
+		container.set_tag_keys(tag_keys);
+
+		// check the destination dir
+		File f_info = new File(destination);
+		String uri = f_info.getAbsolutePath();
+		if (!f_info.exists()){
+			throw new Exception("Cannot create Experiment: the destination directory does not exists");
+		}
+
+		// create the experiment directory
+		String filtered_name = name;
+		filtered_name = filtered_name.replace(" ", "");
+		String experiment_path = SxRequestLocal.path_join(uri, filtered_name);
+		File exp_dir = new File(experiment_path);
+		if (!exp_dir.exists())
+		{
+			exp_dir.mkdir();
+		}
+		else{
+			throw new Exception("Cannot create Experiment: the experiment directory already exists");
+		}
+
+		// create an empty raw dataset
+		String rawdata_path = SxRequestLocal.path_join(experiment_path, "data");
+		String rawdataset_md_url = SxRequestLocal.path_join(rawdata_path, "rawdataset.md.json");
+		File raw_data_dir = new File(rawdata_path);
+		if (!raw_data_dir.exists()){
+			raw_data_dir.mkdir();
+		}
+		else
+		{
+			throw new Exception("Cannot create Experiment raw dataset: the experiment directory does not exists");
+		}
+
+		SxDataset rawdataset = new SxDataset();
+		rawdataset.set_uuid(this._generate_uuid());
+		rawdataset.set_md_uri(rawdataset_md_url);
+		rawdataset.set_name("data");
+		this.update_dataset(rawdataset);
+		container.set_raw_dataset(new SxDatasetMetadata(rawdataset.get_name(), rawdataset_md_url, rawdataset.get_uuid()));
+
+		// save the experiment.md.json metadata file
+		container.set_md_uri(SxRequestLocal.path_join(experiment_path, "experiment.md.json"));
+		this.update_experiment(container);
+		return container;
 	}
 
-	public SxExperiment get_experiment(String uri)
+	public SxExperiment get_experiment(String uri) throws Exception 
 	{
-		
+	    String md_uri = SxRequestLocal.abspath(uri);
+	    File f_info = new File(md_uri);
+	    if (f_info.exists())
+	    {
+	        JSONObject metadata = this._read_json(md_uri);
+	        SxExperiment container = new SxExperiment();
+	        container.set_uuid(metadata.get("uuid").toString());
+	        container.set_md_uri(md_uri);
+
+	        JSONObject information = (JSONObject)metadata.get("information");
+	        container.set_name(information.get("name").toString());
+	        container.set_author(information.get("author").toString());
+	        container.set_date(new SxDate(information.get("date").toString()));
+
+	        JSONObject json_rawdataset = (JSONObject)metadata.get("rawdataset");
+	        String rawdataset_url = SxRequestLocal.absolute_path(SxRequestLocal.normalize_path_sep(json_rawdataset.get("url").toString()), md_uri);
+	        container.set_raw_dataset(new SxDatasetMetadata(json_rawdataset.get("name").toString(), rawdataset_url, json_rawdataset.get("uuid").toString()));
+
+	        JSONArray json_processeddatasets = (JSONArray)metadata.get("processeddatasets");
+	        for (int i = 0 ; i < json_processeddatasets.size() ; ++i)
+	        {
+	        	JSONObject dataset = (JSONObject)json_processeddatasets.get(i);
+	            String processeddataset_url = SxRequestLocal.absolute_path(SxRequestLocal.normalize_path_sep(dataset.get("url").toString()), md_uri);
+	            container.set_processed_dataset(new SxDatasetMetadata(dataset.get("name").toString(), processeddataset_url, dataset.get("uuid").toString()));
+	        }
+	        JSONArray json_tags = (JSONArray)metadata.get("tags");
+	        for (int i = 0 ; i < json_tags.size() ; ++i)
+	        {
+	            String key = json_tags.get(i).toString();
+	            container.set_tag_key(key);
+	        }
+	        return container;
+	    }
+	    throw new Exception("Cannot read the experiment at " + md_uri);
 	}
 
-	public void update_experiment(SxExperiment experiment)
+	@SuppressWarnings("unchecked")
+	public void update_experiment(SxExperiment experiment) throws Exception
 	{
-		
+	    String md_uri = SxRequestLocal.abspath(experiment.get_md_uri());
+	    JSONObject metadata = new JSONObject();
+	    metadata.put("uuid", experiment.get_uuid());
+
+	    // informations
+	    JSONObject information = new JSONObject();
+	    information.put("name", experiment.get_name());
+	    information.put("author", experiment.get_author());
+	    information.put("date", experiment.get_date().get_to_string("YYYY-MM-DD"));
+	    metadata.put("information", information);
+
+	    // raw dataset
+	    String tmp_url = SxRequestLocal.to_unix_path(SxRequestLocal.relative_path(experiment.get_raw_dataset().get_md_uri(), md_uri));
+	    JSONObject json_rawdataset = new JSONObject();
+	    json_rawdataset.put("name", experiment.get_raw_dataset().get_name());
+	    json_rawdataset.put("url", tmp_url);
+	    json_rawdataset.put("uuid", experiment.get_raw_dataset().get_uuid());
+	    metadata.put("rawdataset", json_rawdataset);
+
+	    // processed datasets
+	    JSONArray json_pdatasets = new JSONArray();
+	    for (int i = 0 ; i < experiment.get_processed_datasets_count() ; ++i)
+	    {
+	        SxDatasetMetadata pdataset = experiment.get_processed_dataset(i);
+	        String tmp_url2 = SxRequestLocal.to_unix_path(SxRequestLocal.relative_path(pdataset.get_md_uri(), md_uri));
+
+	        JSONObject json_pdataset = new JSONObject();
+	        json_pdataset.put("name", pdataset.get_name());
+	        json_pdataset.put("url", tmp_url2);
+	        json_pdataset.put("uuid", pdataset.get_uuid());
+
+	        json_pdatasets.add(json_pdataset);
+	    }
+	    metadata.put("processeddatasets", json_pdatasets);
+
+	    // tags keys
+	    JSONArray json_tags = new JSONArray();
+	    for (int i = 0 ; i < experiment.get_tags_keys_count() ; ++i)
+	    {
+	        json_tags.add(experiment.get_tags_key(i));
+	    }
+	    metadata.put("tags", json_tags);
+
+	    // write
+	    this._write_json(metadata, md_uri);
 	}
 
 	public SxRawData import_data(SxExperiment experiment, String data_path, String name, String author, SxFormat format, SxDate date, SxTags tags, boolean copy)
 	{
-		
+
 	}
 
 	public SxRawData get_rawdata(String  uri)
 	{
-		
+
 	}
 
 	public void update_rawdata(SxRawData rawdata)
 	{
-		
+
 	}
 
 	public SxProcessedData get_processeddata(String uri)
 	{
-		
+
 	}
 
 	public void update_processeddata(SxProcessedData processeddata)
 	{
-		
+
 	}
 
 	public SxDataset get_dataset_from_uri(String uri)
 	{
-		
+
 	}
 
 	public void update_dataset(SxDataset dataset)
 	{
-		
+
 	}
 
 	public SxDataset create_dataset(SxExperiment experiment, String dataset_name)
 	{
-		
+
 	}
 
 	public SxRun create_run(SxDataset dataset, SxRun run_info)
 	{
-		
+
 	}
 
 	public SxRun get_run(String uri)
 	{
-		
+
 	}
 
 	public SxProcessedData create_data(SxDataset dataset, SxRun run, SxProcessedData processed_data)
 	{
-		
+
 	}
 
 
@@ -106,8 +234,8 @@ public class SxRequestLocal extends SxRequest{
 	 */
 	public String _generate_uuid()
 	{
-        UUID uuid = UUID.randomUUID();
-        return uuid.toString();
+		UUID uuid = UUID.randomUUID();
+		return uuid.toString();
 	}
 
 	/**
