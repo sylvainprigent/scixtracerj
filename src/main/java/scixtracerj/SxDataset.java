@@ -12,7 +12,7 @@ public class SxDataset extends SxMetadata {
 
 	public SxDataset()
 	{
-
+		m_data = new ArrayList<SxMetadata>();
 	}
 
 	/**

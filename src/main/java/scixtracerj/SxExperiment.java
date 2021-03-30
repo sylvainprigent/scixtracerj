@@ -1,5 +1,6 @@
 package scixtracerj;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SxExperiment extends SxMetadata {
@@ -13,7 +14,8 @@ public class SxExperiment extends SxMetadata {
 
 	public SxExperiment()
 	{
-
+		m_processed_datasets = new ArrayList<SxDatasetMetadata>();
+		m_tags_keys = new ArrayList<String>();
 	}
 	
 	/**

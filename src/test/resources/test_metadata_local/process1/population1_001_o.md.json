@@ -1,0 +1,29 @@
+{
+    "common": {
+        "author": "Sylvain Prigent",
+        "date": "2020-03-04",
+        "format": "tif",
+        "name": "population1_001_o",
+        "url": "population1_001_o.tif"
+    },
+    "origin": {
+        "inputs": [
+            {
+                "name": "i",
+                "type": "raw",
+                "url": "../data/population1_001.md.json",
+                "uuid": "fake_uuid"
+            }
+        ],
+        "output": {
+            "label": "Denoised image",
+            "name": "o"
+        },
+        "run": {
+            "url": "run.md.json",
+            "uuid": "fake_uuid"
+        },
+        "type": "processed"
+    },
+    "uuid": "fake_uuid"
+}
