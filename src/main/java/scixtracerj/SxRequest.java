@@ -1,6 +1,7 @@
 package scixtracerj;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -23,9 +24,10 @@ public abstract class SxRequest {
 	 * @param  date Creation date of the experiment
 	 * @param tag_keys List of keys used for the experiment vocabulary
 	 * @param destination Destination where the experiment is created. It is a the path of the directory where the experiment will be created for local use case
+	 * @throws Exception 
 	 * @returns Experiment container with the experiment metadata
 	 */
-	public abstract SxExperiment create_experiment(String name, String author, SxDate date, List<String> tag_keys, String destination);
+	public abstract SxExperiment create_experiment(String name, String author, SxDate date, List<String> tag_keys, String destination) throws Exception;
 
 	/**
 	 * Create a new experiment
@@ -44,8 +46,9 @@ public abstract class SxRequest {
 	 * Read an experiment from the database
 	 * @param uri URI of the experiment. For local use case, the URI is either the path of the experiment directory, or the path of the experiment.md.json file
 	 * @return Experiment container with the experiment metadata
+	 * @throws Exception 
 	 */
-	public abstract SxExperiment get_experiment(String uri);
+	public abstract SxExperiment get_experiment(String uri) throws Exception;
 
 	/**
 	 *  Write an experiment to the database
@@ -65,70 +68,83 @@ public abstract class SxRequest {
 	 * @param tags Tags to identify the data
 	 * @param copy True to copy the data to the Experiment database False otherwise
 	 * @return a RawData containing the metadata
+	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public abstract SxRawData import_data(SxExperiment experiment, String data_path, String name, String author, SxFormat format, SxDate date, SxTags tags, boolean copy);
+	public abstract SxRawData import_data(SxExperiment experiment, String data_path, String name, String author, SxFormat format, SxDate date, SxTags tags, boolean copy) throws IOException, Exception;
 
 	/**
 	 * Read a raw data from the database
 	 * @param uri URI if the rawdata
 	 * @return RawData object containing the raw data metadata
+	 * @throws Exception 
 	 */
-	public abstract SxRawData get_rawdata(String uri);
+	public abstract SxRawData get_rawdata(String uri) throws Exception;
 
 	/**
 	 * Read a raw data from the database
 	 * @param rawdata Container with the rawdata metadata
+	 * @throws Exception 
 	 */
-	public abstract void update_rawdata(SxRawData rawdata);
+	public abstract void update_rawdata(SxRawData rawdata) throws Exception;
 
 	/**
 	 * Read a processed data from the database
 	 * @param uri URI if the processeddata
 	 * @return ProcessedData object containing the raw data metadata
+	 * @throws Exception 
 	 */
-	public abstract  SxProcessedData get_processeddata(String uri);
+	public abstract  SxProcessedData get_processeddata(String uri) throws Exception;
 
 	/**
 	 * Read a processed data from the database
 	 * @param processeddata Container with the processeddata metadata
+	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public abstract void update_processeddata(SxProcessedData processeddata);
+	public abstract void update_processeddata(SxProcessedData processeddata) throws IOException, Exception;
 
 	/**
 	 * Read a dataset from the database using it URI
 	 * @param uri URI if the dataset
 	 * @return Dataset object containing the dataset metadata
+	 * @throws Exception 
 	 */
-	public abstract SxDataset get_dataset_from_uri(String uri);
+	public abstract SxDataset get_dataset_from_uri(String uri) throws Exception;
 
 	/**
 	 * Read a processed data from the database
 	 * @param dataset Container with the dataset metadata
+	 * @throws IOException 
 	 */
-	public abstract void update_dataset(SxDataset dataset);
+	public abstract void update_dataset(SxDataset dataset) throws IOException;
 
 	/**
 	 * Create a processed dataset in an experiment
 	 * @param experiment Object containing the experiment metadata
 	 * @param dataset_name Name of the dataset
 	 * @return Dataset object containing the new dataset metadata
+	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public abstract SxDataset create_dataset(SxExperiment experiment, String dataset_name);
+	public abstract SxDataset create_dataset(SxExperiment experiment, String dataset_name) throws IOException, Exception;
 
 	/**
 	 * Create a new run metadata
 	 * @param dataset Object of the dataset metadata
 	 * @param run_info Object containing the metadata of the run. md_uri is ignored and created automatically by this method
 	 * @return Run object with the metadata and the new created md_uri
+	 * @throws IOException 
 	 */
-	public abstract SxRun create_run(SxDataset dataset, SxRun run_info);
+	public abstract SxRun create_run(SxDataset dataset, SxRun run_info) throws IOException;
 
 	/**
 	 * Read a run metadata from the data base
 	 * @param  uri URI of the run entry in the database
 	 * @return Run: object containing the run metadata
+	 * @throws Exception 
 	 */
-	public abstract SxRun get_run(String uri);
+	public abstract SxRun get_run(String uri) throws Exception;
 
 	/**
 	 * Create a new processed data for a given dataset
@@ -136,8 +152,10 @@ public abstract class SxRequest {
 	 * @param run Metadata of the run
 	 * @param processed_data Object containing the new processed data. md_uri is ignored and created automatically by this method
 	 * @return
+	 * @throws IOException 
+	 * @throws Exception 
 	 */
-	public abstract SxProcessedData create_data(SxDataset dataset, SxRun run, SxProcessedData processed_data);
+	public abstract SxProcessedData create_data(SxDataset dataset, SxRun run, SxProcessedData processed_data) throws IOException, Exception;
 
 
 	/**
@@ -152,8 +170,9 @@ public abstract class SxRequest {
 	 * @param format Format of the image (ex: tif)
 	 * @param date Date when the data where created
 	 * @param copy_data True to copy the data to the experiment, false otherwise. If the data are not copied, an absolute link to dir_uri is kept in the experiment metadata. The original data directory must then not be changed for the experiment to find the data.
+	 * @throws Exception 
 	 */
-	void import_dir(SxExperiment experiment, String dir_uri, String filter, String author, SxFormat format, SxDate date, boolean copy_data)
+	void import_dir(SxExperiment experiment, String dir_uri, String filter, String author, SxFormat format, SxDate date, boolean copy_data) throws Exception
 	{
 		File directory = new File(dir_uri);
 	    String data_files[] = directory.list();
@@ -167,9 +186,7 @@ public abstract class SxRequest {
 	        boolean matchFound = matcher.find();
 	        if(matchFound) {
 	            String data_url = dir_uri + File.separator + filename;
-	            this.import_data(experiment, data_url, filename,
-	                              author, format, date,
-	                              new SxTags(), copy_data);
+	            this.import_data(experiment, data_url, filename, author, format, date, new SxTags(), copy_data);
 	        }
 	    }
 	}
@@ -233,8 +250,9 @@ public abstract class SxRequest {
 	 * depending on the process chain
 	 * @param processed_data Container of the processed data URI
 	 * @return Parent data (RawData or ProcessedData)
+	 * @throws Exception 
 	 */
-	SxData get_parent(SxProcessedData processed_data)
+	SxData get_parent(SxProcessedData processed_data) throws Exception
 	{
 	    if (processed_data.get_run_inputs_count() > 0)
 	    {
@@ -256,8 +274,9 @@ public abstract class SxRequest {
 	 * been seen in the raw dataset
 	 * @param processeddata Container of the processed data URI
 	 * @return  the origin data in a RawData object
+	 * @throws Exception 
 	 */
-	SxRawData get_origin(SxProcessedData processed_data)
+	SxRawData get_origin(SxProcessedData processed_data) throws Exception
 	{
 	    if (processed_data.get_run_inputs_count() > 0)
 	    {
@@ -276,8 +295,9 @@ public abstract class SxRequest {
 	 * Read the raw dataset from the database
 	 * @param experiment Container of the experiment metadata
 	 * @return Dataset object containing the dataset metadata
+	 * @throws Exception 
 	 */
-	SxDataset get_rawdataset(SxExperiment experiment)
+	SxDataset get_rawdataset(SxExperiment experiment) throws Exception
 	{
 		return this.get_dataset_from_uri(experiment.get_raw_dataset().get_md_uri());
 	}
@@ -287,8 +307,9 @@ public abstract class SxRequest {
 	 * @param experiment Object containing the experiment metadata
 	 * @param name Name of the dataset to query
 	 * @return a Dataset containing the dataset metadata. None is return if the dataset is not found
+	 * @throws Exception 
 	 */
-	SxDataset get_dataset(SxExperiment experiment, String name)
+	SxDataset get_dataset(SxExperiment experiment, String name) throws Exception
 	{
 	    if (name == "data"){
 	        return this.get_dataset_from_uri(experiment.get_raw_dataset().get_md_uri());

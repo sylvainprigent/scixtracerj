@@ -2,7 +2,7 @@ package scixtracerj;
 
 import java.util.List;
 
-public class SxRun {
+public class SxRun extends SxMetadata {
 
 	private SxMetadata m_processed_dataset;
 	private String m_process_name;
