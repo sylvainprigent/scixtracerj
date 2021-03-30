@@ -1,17 +1,17 @@
 {
-    "common": {
-        "author": "Sylvain Prigent",
-        "date": "2019-03-17",
-        "format": "tif",
-        "name": "population1_001.tif",
-        "url": "population1_001.tif"
-    },
-    "origin": {
-        "type": "raw"
-    },
-    "tags": {
-        "Population": "population1",
-        "number": "001"
-    },
-    "uuid": "fake_uuid"
+  "common": {
+    "date": "2019-03-17",
+    "author": "Sylvain Prigent",
+    "name": "population1_001.tif",
+    "format": "tif",
+    "url": "population1_001.tif"
+  },
+  "origin": {
+    "type": "raw"
+  },
+  "uuid": "fake_uuid",
+  "tags": {
+    "number": "001",
+    "Population": "population1"
+  }
 }

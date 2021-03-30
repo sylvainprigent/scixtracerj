@@ -233,7 +233,9 @@ public abstract class SxRequest {
 	    {
 	        SxRawData _rawdata = this.get_rawdata(_rawdataset.get_data(i).get_md_uri());
 	        Path path = Paths.get(_rawdata.get_uri());
-	        String splited_name[] = path.getFileName().toString().split(separator);
+	        String filename = path.getFileName().toString();
+	        filename = filename.substring(0, filename.lastIndexOf('.'));
+	        String splited_name[] = filename.split(separator);
 	        
 	        String value = "";
 	        if (splited_name.length > value_position){
@@ -256,7 +258,7 @@ public abstract class SxRequest {
 	{
 	    if (processed_data.get_run_inputs_count() > 0)
 	    {
-	        if (processed_data.get_run_input(0).get_type() == "raw")
+	        if (processed_data.get_run_input(0).get_type().equals("raw"))
 	        {
 	            return this.get_rawdata(processed_data.get_run_input(0).get_data().get_md_uri());
 	        }
@@ -280,12 +282,13 @@ public abstract class SxRequest {
 	{
 	    if (processed_data.get_run_inputs_count() > 0)
 	    {
-	        if (processed_data.get_run_input(0).get_type() == "raw"){
+	        if (processed_data.get_run_input(0).get_type().equals("raw")){
 	            return this.get_rawdata(processed_data.get_run_input(0).get_data().get_md_uri());
 	        }
 	        else
 	        {
-	            return this.get_origin(this.get_processeddata(processed_data.get_run_input(0).get_data().get_md_uri()));
+	        	SxProcessedData pdata = this.get_processeddata(processed_data.get_run_input(0).get_data().get_md_uri());
+	            return this.get_origin(pdata);
 	        }
 	    }
 	    return null;
@@ -311,7 +314,7 @@ public abstract class SxRequest {
 	 */
 	SxDataset get_dataset(SxExperiment experiment, String name) throws Exception
 	{
-	    if (name == "data"){
+	    if (name.equals("data")){
 	        return this.get_dataset_from_uri(experiment.get_raw_dataset().get_md_uri());
 	    }
 	    else
@@ -319,7 +322,7 @@ public abstract class SxRequest {
 	        for (int i = 0 ; i < experiment.get_processed_datasets_count() ; ++i)
 	        {
 	            SxDataset pdataset = this.get_dataset_from_uri(experiment.get_processed_dataset(i).get_md_uri());
-	            if (pdataset.get_name() == name)
+	            if (pdataset.get_name().equals(name))
 	            {
 	                return pdataset;
 	            }
@@ -351,7 +354,7 @@ public abstract class SxRequest {
 	    // initially all the raw data are selected
 	    List<SxSearchContainer> selected_list = new ArrayList<SxSearchContainer>();
 	    // raw dataset
-	    if (dataset.get_name() == "data")
+	    if (dataset.get_name().equals("data"))
 	    {
 	        for (int i = 0 ; i < dataset.get_data_count() ; ++i)
 	        {
@@ -369,12 +372,12 @@ public abstract class SxRequest {
 	            pre_list.add(this._processed_data_to_search_container(p_con));
 	        }
 	        // remove the data where output origin is not the asked one
-	        if (origin_output_name != "")
+	        if (!origin_output_name.equals(""))
 	        {
 	            for (int i = 0 ; i < pre_list.size() ; ++i)
 	            {
 	                SxProcessedData data = this.get_processeddata(pre_list.get(i).get_uri());
-	                if (data.get_run_output().get_name() == origin_output_name){
+	                if (data.get_run_output().get_name().equals(origin_output_name)){
 	                    selected_list.add(pre_list.get(i));
 	                }
 	            }
@@ -384,7 +387,7 @@ public abstract class SxRequest {
 	        }
 	    }
 	    // run all the AND queries on the preselected dataset
-	    if (query != "")
+	    if (!query.equals(""))
 	    {
 	        for (int i = 0 ; i < queries.length ; ++i)
 	        {
@@ -397,7 +400,7 @@ public abstract class SxRequest {
 	    for (int i = 0 ; i < selected_list.size() ; ++i)
 	    {
 	        SxSearchContainer d = selected_list.get(i);
-	        if (dataset.get_name() == "data")
+	        if (dataset.get_name().equals("data"))
 	        {
 	            out.add(this.get_rawdata(d.get_uri()));
 	        }

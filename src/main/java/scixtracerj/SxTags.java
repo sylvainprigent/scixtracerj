@@ -1,5 +1,6 @@
 package scixtracerj;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -9,7 +10,7 @@ public class SxTags {
 	
     public SxTags()
     {
-    	
+    	m_tags = new HashMap<String, String>();
     }
 
     /**

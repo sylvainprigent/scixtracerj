@@ -1,29 +1,29 @@
 {
-    "common": {
-        "author": "Sylvain Prigent",
-        "date": "2020-03-04",
-        "format": "tif",
-        "name": "population1_001_o",
-        "url": "population1_001_o.tif"
+  "common": {
+    "date": "2020-03-04",
+    "author": "Sylvain Prigent",
+    "name": "population1_001_o",
+    "format": "tif",
+    "url": "population1_001_o.tif"
+  },
+  "origin": {
+    "output": {
+      "name": "o",
+      "label": "Denoised image"
     },
-    "origin": {
-        "inputs": [
-            {
-                "name": "i",
-                "type": "raw",
-                "url": "../data/population1_001.md.json",
-                "uuid": "fake_uuid"
-            }
-        ],
-        "output": {
-            "label": "Denoised image",
-            "name": "o"
-        },
-        "run": {
-            "url": "run.md.json",
-            "uuid": "fake_uuid"
-        },
-        "type": "processed"
+    "inputs": [
+      {
+        "name": "i",
+        "type": "raw",
+        "uuid": "fake_uuid",
+        "url": "../data/population1_001.md.json"
+      }
+    ],
+    "run": {
+      "uuid": "fake_uuid",
+      "url": "run.md.json"
     },
-    "uuid": "fake_uuid"
+    "type": "processed"
+  },
+  "uuid": "fake_uuid"
 }

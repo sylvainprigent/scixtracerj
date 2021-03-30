@@ -36,7 +36,9 @@ public class SxRequestLocal extends SxRequest{
 		container.set_name(name);
 		container.set_author(author);
 		container.set_date(date);
-		container.set_tag_keys(tag_keys);
+		for (String key: tag_keys) {
+			container.set_tag_key(key);
+		}
 
 		// check the destination dir
 		File f_info = new File(destination);
@@ -175,11 +177,11 @@ public class SxRequestLocal extends SxRequest{
 	{
 		String rawdataset_uri = SxRequestLocal.abspath(experiment.get_raw_dataset().get_md_uri());
 		File file_info = new File(rawdataset_uri);
-		String data_dir_path = file_info.getAbsolutePath();
+		String data_dir_path = file_info.getParentFile().getAbsolutePath();
 
 		// create the new data uri
 		File data_file_info = new File(data_path);
-		String data_base_name = data_file_info.getName();
+		String data_base_name = remove_extension(data_file_info.getName());
 		String filtered_name = data_base_name.replace(" ", "");
 		String md_uri = SxRequestLocal.path_join(data_dir_path, filtered_name + ".md.json");
 
@@ -219,11 +221,10 @@ public class SxRequestLocal extends SxRequest{
 		this.update_dataset(rawdataset_container);
 
 		// add tags keys to experiment
-		String[] keys = (String[]) tags.get_keys().toArray();
-		for (int i = 0 ; i < tags.get_count() ; ++i)
+		for (String item: tags.get_keys()) 
 		{
-			experiment.set_tag_key(keys[i]);
-		}
+			experiment.set_tag_key(item);
+        }
 		this.update_experiment(experiment);
 
 		return metadata;
@@ -254,11 +255,9 @@ public class SxRequestLocal extends SxRequest{
 			if (metadata.keySet().contains("tags"))
 			{
 				JSONObject tags = (JSONObject)metadata.get("tags");
-				String[] keys = (String[])tags.keySet().toArray();
 				SxTags tags_container = new SxTags();
-				for (int i = 0 ; i < keys.length ; ++i)
-				{
-					tags_container.set_tag(keys[i], tags.get(keys[i]).toString());
+				for(Object item: tags.keySet()) {
+					tags_container.set_tag(item.toString(), tags.get(item.toString()).toString());
 				}
 				container.set_tags(tags_container);
 			}
@@ -289,11 +288,10 @@ public class SxRequestLocal extends SxRequest{
 
 		JSONObject json_tags = new JSONObject();
 		SxTags _tags = rawdata.get_tags();
-		List<String> keys = (List<String>) _tags.get_keys();
-		for (int i = 0 ; i < keys.size() ; ++i)
+		for (String item: _tags.get_keys()) 
 		{
-			json_tags.put(keys.get(i), _tags.get_tag(keys.get(i)));
-		}
+			json_tags.put(item, _tags.get_tag(item));
+        }
 		metadata.put("tags", json_tags);
 
 		this._write_json(metadata, md_uri);
@@ -445,7 +443,8 @@ public class SxRequestLocal extends SxRequest{
 	{
 		// create the dataset metadata
 		String experiment_md_uri = SxRequestLocal.abspath(experiment.get_md_uri());
-		String experiment_dir = SxRequestLocal.md_file_path(experiment_md_uri);
+		File experiment_jfile = new File(SxRequestLocal.md_file_path(experiment_md_uri));
+		String experiment_dir = experiment_jfile.getParent();
 		String dataset_dir = SxRequestLocal.path_join(experiment_dir, dataset_name);
 		File dataset_qdir = new File(dataset_dir);
 		if (!dataset_qdir.exists()){
@@ -470,7 +469,8 @@ public class SxRequestLocal extends SxRequest{
 	{
 		// create run URI
 		String dataset_md_uri = SxRequestLocal.abspath(dataset.get_md_uri());
-		String dataset_dir = SxRequestLocal.md_file_path(dataset_md_uri);
+		File dataset_jfile = new File(SxRequestLocal.md_file_path(dataset_md_uri));
+		String dataset_dir = dataset_jfile.getParent();
 		String run_md_file_name = "run.md.json";
 		int runid_count = 0;
 
@@ -546,7 +546,8 @@ public class SxRequestLocal extends SxRequest{
 	public SxProcessedData create_data(SxDataset dataset, SxRun run, SxProcessedData processed_data) throws Exception
 	{
 		String md_uri = SxRequestLocal.abspath(dataset.get_md_uri());
-		String dataset_dir = SxRequestLocal.md_file_path(md_uri);
+		File dataset_jfile = new File(SxRequestLocal.md_file_path(md_uri));
+		String dataset_dir = dataset_jfile.getParent();
 
 		// create the data metadata
 		String data_md_file = SxRequestLocal.path_join(dataset_dir, processed_data.get_name()+ ".md.json");
@@ -834,5 +835,10 @@ public class SxRequestLocal extends SxRequest{
 	{
 		File f = new File(path);
 		return f.getAbsolutePath();
+	}
+	
+	public static String remove_extension(String filename)
+	{
+		return filename.substring(0, filename.lastIndexOf('.'));
 	}
 }

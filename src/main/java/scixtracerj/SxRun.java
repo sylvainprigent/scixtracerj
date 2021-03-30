@@ -1,5 +1,6 @@
 package scixtracerj;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class SxRun extends SxMetadata {
@@ -12,7 +13,8 @@ public class SxRun extends SxMetadata {
 	    
     public SxRun()
     {
-    	
+    	m_inputs = new ArrayList<SxRunInput>();
+    	m_parameters = new ArrayList<SxRunParameter>();
     }
 
     /**

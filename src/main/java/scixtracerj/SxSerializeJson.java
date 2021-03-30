@@ -30,10 +30,9 @@ public class SxSerializeJson extends SxSerialize{
 
 	    JSONObject tags = new JSONObject();
 	    SxTags _tags = container.get_tags();
-	    String keys[] = (String[]) _tags.get_keys().toArray();
-	    for (int i = 0 ; i < keys.length ; ++i)
+	    for(String key: _tags.get_keys())
 	    {
-	        tags.put(keys[i], _tags.get_tag(keys[i]));
+	    	tags.put(key, _tags.get_tag(key));
 	    }
 
 	    return metadata.toString();

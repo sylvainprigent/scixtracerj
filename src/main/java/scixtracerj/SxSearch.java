@@ -76,7 +76,7 @@ public class SxSearch {
             String value = split_query[1];
             for (int i = 0 ; i < search_list.size() ; ++i)
             {
-                if (search_list.get(i).is_tag(key) && search_list.get(i).get_tag(key) == value){
+                if (search_list.get(i).is_tag(key) && search_list.get(i).get_tag(key).equals(value)){
                     selected_list.add(search_list.get(i));
                 }
             }

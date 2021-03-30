@@ -1,5 +1,7 @@
 package scixtracerj;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 public class SxProcessedData extends SxData {
@@ -10,7 +12,7 @@ public class SxProcessedData extends SxData {
 
     public SxProcessedData()
     {
-    	
+    	m_inputs = new HashMap<String, SxProcessedDataInput>();
     }
 
     /**
@@ -47,8 +49,18 @@ public class SxProcessedData extends SxData {
      */
     public SxProcessedDataInput get_run_input(int index)
     {
-    	SxProcessedDataInput[] arr = (SxProcessedDataInput[]) m_inputs.values().toArray();
-    	return  arr[index];  
+    	Iterator <String> it = m_inputs.keySet().iterator();  
+    	int count = -1;
+    	String key = "";
+    	while(it.hasNext())  
+    	{  
+    		count++;
+    		key = (String)it.next();
+    		if (count == index) {
+    			return m_inputs.get(key);
+    		}
+    	}
+    	return null;
     }
 
     /**

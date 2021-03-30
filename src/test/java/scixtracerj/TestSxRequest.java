@@ -67,12 +67,25 @@ public class TestSxRequest {
 		if (experiment_dir.exists()) {
 			this.deleteDirectory(experiment_dir);
 		}
-		
 		File tst_experiment_jfile = new File(this.tst_experiment_file);
 		if (tst_experiment_jfile.exists()) {
 			tst_experiment_jfile.delete();
 		}
 		
+		File tst_rawdata_jfile = new File(tst_rawdata_file);
+		if (tst_rawdata_jfile.exists()) {
+			tst_rawdata_jfile.delete();
+		}
+		
+		File tst_dataset_jfile = new File(tst_dataset_file);
+		if (tst_dataset_jfile.exists()) {
+			tst_dataset_jfile.delete();
+		}
+		
+		File tst_processeddata_jfile = new File(tst_processeddata_file);
+		if (tst_processeddata_jfile.exists()) {
+			tst_processeddata_jfile.delete();
+		}
 	}
 	
 	@Test
@@ -144,7 +157,6 @@ public class TestSxRequest {
 	    assertTrue(value);
 	}
 
-	/*
 	@Test
 	public void test_import_data() throws Exception
 	{
@@ -160,7 +172,6 @@ public class TestSxRequest {
 	    SxRawData rawData = this.req.import_data(experiment, data_path, name, author, format_, new SxDate("now"), tags, true);
 
 	    // test generated files
-
 	    File md_qfile = new File(this.tst_experiment_dir + File.separator + "myexperiment" + File.separator + "data" + File.separator + "population1_001.md.json");
 	    boolean t1 = false;
 	    if (md_qfile.exists())
@@ -201,6 +212,7 @@ public class TestSxRequest {
 	     assertTrue( t1 && t2 && t3 && t4 && t5);
 	}
 
+	
 	@Test
 	public void test_import_dir() throws Exception
 	{
@@ -214,7 +226,7 @@ public class TestSxRequest {
 	    System.out.println("data_files_count=" + data_files_count);
 	    // count the number of imported files
 	    boolean t1 = false;
-	    if (data_files_count == 83)
+	    if (data_files_count == 81)
 	    {
 	        t1 = true;
 	    }
@@ -234,7 +246,8 @@ public class TestSxRequest {
 	    System.out.println("t2:" + t2);
 	    assertTrue(t1 && t2);
 	}
-
+	
+	
 	@Test
 	public void test_tag_from_name() throws Exception
 	{
@@ -254,14 +267,14 @@ public class TestSxRequest {
 	    SxRawData data1 = this.req.get_rawdata(data_dir + File.separator + "population1_012.md.json");
 
 	    boolean t2 = false;
-	    if ( data1.get_tags().get_keys().contains("Population") && data1.get_tags().get_tag("Population") == "population1")
+	    if ( data1.get_tags().get_keys().contains("Population") && data1.get_tags().get_tag("Population").equals("population1"))
 	    {
 	        t2 = true;
 	    }
 
 	    SxRawData data2 = this.req.get_rawdata(data_dir + File.separator + "population2_011.md.json");
 	    boolean t3 = false;
-	    if (data2.get_tags().get_keys().contains("Population") && data2.get_tags().get_tag("Population") == "population2")
+	    if (data2.get_tags().get_keys().contains("Population") && data2.get_tags().get_tag("Population").equals("population2"))
 	    {
 	        t3 = true;
 	    }
@@ -273,6 +286,7 @@ public class TestSxRequest {
 	    assertTrue(t1 && t2 && t3);
 	}
 
+	
 	@Test
 	public void test_tag_using_separator() throws Exception
 	{
@@ -292,14 +306,14 @@ public class TestSxRequest {
 	     SxRawData data1 = this.req.get_rawdata(data_dir + File.separator + "population1_012.md.json");
 
 	     boolean t2 = false;
-	     if (data1.get_tags().get_keys().contains("ID") && data1.get_tags().get_tag("ID")== "012")
+	     if (data1.get_tags().get_keys().contains("ID") && data1.get_tags().get_tag("ID").equals("012"))
 	     {
 	         t2 = true;
 	     }
 
 	     SxRawData data2 = this.req.get_rawdata(data_dir + File.separator + "population2_011.md.json");
 	     boolean t3 = false;
-	     if (data2.get_tags().get_keys().contains("ID") && data2.get_tags().get_tag("ID")== "011")
+	     if (data2.get_tags().get_keys().contains("ID") && data2.get_tags().get_tag("ID").equals("011"))
 	     {
 	         t3 = true;
 	     }
@@ -311,6 +325,7 @@ public class TestSxRequest {
 	     assertTrue(t1 && t2 && t3);
 	}
 
+	
 	@Test
 	public void test_get_rawdata() throws Exception
 	{
@@ -321,6 +336,7 @@ public class TestSxRequest {
 	    assertTrue(value);
 	}
 
+	
 	@Test
 	public void test_update_rawdata() throws Exception
 	{
@@ -332,7 +348,8 @@ public class TestSxRequest {
 	    System.out.println("test_get_rawdata cmp:" + value);
 	    assertTrue(value);
 	}
-
+		
+	
 	@Test
 	public void test_get_processeddata() throws Exception
 	{
@@ -343,7 +360,8 @@ public class TestSxRequest {
 	    System.out.println("test_get_processeddata cmp:" + value);
 	    assertTrue(value);
 	}
-
+	
+	
 	@Test
 	public void test_update_processeddata() throws Exception
 	{
@@ -354,7 +372,8 @@ public class TestSxRequest {
 	    System.out.println("test_update_processeddata cmp:" + value);
 	    assertTrue(value);
 	}
-
+	
+	
 	@Test
 	public void test_get_dataset_from_uri() throws Exception
 	{
@@ -366,6 +385,7 @@ public class TestSxRequest {
 	    assertTrue(value);
 	}
 
+	
 	@Test
 	public void test_update_dataset() throws IOException
 	{
@@ -377,7 +397,7 @@ public class TestSxRequest {
 	    System.out.println("test_update_dataset cmp:" + value);
 	    assertTrue(value);
 	}
-
+		
 	@Test
 	public void test_get_rawdataset() throws Exception
 	{
@@ -389,7 +409,7 @@ public class TestSxRequest {
 	    System.out.println("test_get_rawdataset cmp:" + value);
 	    assertTrue(value);
 	}
-
+	
 	@Test
 	public void test_get_parent() throws Exception
 	{
@@ -398,14 +418,14 @@ public class TestSxRequest {
 	    boolean cmp = false;
 	    System.out.println("get parent original name " +  processed_data.get_name());
 	    System.out.println("get parent name " +  parent_data.get_name());
-	    if (parent_data.get_name() == "population1_002_o")
+	    if (parent_data.get_name().equals("population1_002_o"))
 	    {
 	        cmp = true;
 	    }
 	    System.out.println("test_get_parent cmp:" + cmp);
 	    assertTrue(cmp);
 	}
-
+		
 	@Test
 	public void test_get_origin() throws Exception
 	{
@@ -414,14 +434,14 @@ public class TestSxRequest {
 	    boolean cmp = false;
 	    System.out.println("get origin original name " +  processed_data.get_name());
 	    System.out.println("get origin name " +  origin_data.get_name());
-	    if (origin_data.get_name() == "population1_002.tif")
+	    if (origin_data.get_name().equals("population1_002.tif"))
 	    {
 	        cmp = true;
 	    }
 	    System.out.println("test_get_origin cmp:" + cmp);
 	    assertTrue(cmp);
 	}
-
+	
 	@Test
 	public void test_get_dataset_raw() throws Exception
 	{
@@ -435,21 +455,21 @@ public class TestSxRequest {
 	    System.out.println("test_get_dataset_raw cmp:" + cmp);
 	    assertTrue(cmp);
 	}
-
+	
 	@Test
 	public void test_get_dataset_processed() throws Exception
 	{
 	    SxExperiment experiment = this.req.get_experiment(ref_experiment_file);
 	    SxDataset dataset = this.req.get_dataset(experiment, "process1");
 	    boolean cmp = false;
-	    if (dataset.get_name() == "process1")
+	    if (dataset.get_name().equals("process1"))
 	    {
 	        cmp = true;
 	    }
 	    System.out.println("test_get_dataset_processed cmp:" + cmp);
 	    assertTrue(cmp);
 	}
-
+	
 	@Test
 	public void test_get_data() throws Exception
 	{
@@ -457,14 +477,15 @@ public class TestSxRequest {
 	    SxDataset dataset = this.req.get_dataset(experiment, "process1");
 	    List<SxData> data = this.req.get_data(dataset, "name=population1_001_o", "o");
 	    boolean cmp = false;
-	    if (data.get(0).get_name() == "population1_001_o")
+	    if (data.get(0).get_name().equals("population1_001_o"))
 	    {
 	        cmp = true;
 	    }
 	    System.out.println("test_get_data cmp:" + cmp);
 	    assertTrue(cmp);
 	}
-
+	
+	
 	@Test
 	public void test_create_dataset() throws Exception
 	{
@@ -481,7 +502,7 @@ public class TestSxRequest {
 
 	    boolean t2 = false;
 	    SxDataset dataset = this.req.get_dataset(experiment, "myprocess");
-	    if (dataset.get_name() == "myprocess")
+	    if (dataset.get_name().equals("myprocess"))
 	    {
 	        t2 = true;
 	    }
@@ -491,7 +512,7 @@ public class TestSxRequest {
 	    System.out.println("t2:" + t2);
 	    assertTrue(t1 && t2);
 	}
-
+	
 	@Test
 	public void test_create_run() throws Exception
 	{
@@ -513,7 +534,7 @@ public class TestSxRequest {
 	    }
 
 	    boolean t2 = false;
-	    if (run_info.get_process_name() == "threshold")
+	    if (run_info.get_process_name().equals("threshold"))
 	    {
 	        t2 = true;
 	    }
@@ -523,18 +544,18 @@ public class TestSxRequest {
 	    System.out.println("t2:" + t2);
 	    assertTrue(t1 && t2);
 	}
-
+	
 	@Test
 	public void test_get_run() throws Exception
 	{
 	    SxRun run = this.req.get_run(this.ref_run_file);
 	    boolean t1 = false;
-	    if (run.get_process_name() =="SPARTION 2D")
+	    if (run.get_process_name().equals("SPARTION 2D"))
 	    {
 	        t1 = true;
 	    }
 	    boolean t2 = false;
-	    if (run.get_processed_dataset().get_uuid() == "fake_uuid")
+	    if (run.get_processed_dataset().get_uuid().equals("fake_uuid"))
 	    {
 	        t2 = true;
 	    }
@@ -543,7 +564,7 @@ public class TestSxRequest {
 	    System.out.println("t2:" + t2);
 	    assertTrue(t1 && t2);
 	}
-
+	
 	@Test
 	public void test_create_data() throws Exception
 	{
@@ -577,7 +598,7 @@ public class TestSxRequest {
 	        t1 = true;
 	    }
 	    boolean t2 = false;
-	    if (processed_data.get_name() == "myimage")
+	    if (processed_data.get_name().equals("myimage"))
 	    {
 	        t2 = true;
 	    }
@@ -599,7 +620,5 @@ public class TestSxRequest {
 	    System.out.println("t4:" + t4);
 	    assertTrue(t1 && t2 && t3 && t4);
 	}
-	
-	*/
 
 }
